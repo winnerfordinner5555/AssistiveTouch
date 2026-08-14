@@ -43,3 +43,4 @@ class MainActivity : AppCompatActivity() {
         status = TextView(this).apply {
             textSize = 15f
             setPadding(0, 32, 0, 32)
+        }

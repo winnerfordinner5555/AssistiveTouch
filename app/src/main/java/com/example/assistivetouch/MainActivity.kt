@@ -34,14 +34,63 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun buildLayout(): View {
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
-            setPadding(64, 120, 64, 64)
+        val root = LinearLayout(this)
+        root.orientation = LinearLayout.VERTICAL
+        root.gravity = Gravity.CENTER
+        root.setPadding(64, 120, 64, 64)
+
+        status = TextView(this)
+        status.textSize = 15f
+        status.setPadding(0, 32, 0, 32)
+
+        val title = TextView(this)
+        title.text = "Assistive Touch"
+        title.textSize = 26f
+        title.setPadding(0, 0, 0, 32)
+
+        val overlayBtn = Button(this)
+        overlayBtn.text = "1. Grant the display over other apps permission"
+        overlayBtn.setOnClickListener {
+            if (!Settings.canDrawOverlays(this@MainActivity)) {
+                startActivity(
+                    Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:$packageName")
+                    )
+                )
+            }
         }
 
-        status = TextView(this).apply {
-            textSize = 15f
-            setPadding(0, 32, 0, 32)
+        val accessibilityBtn = Button(this)
+        accessibilityBtn.text = "2. Enable the accessibility service"
+        accessibilityBtn.setOnClickListener {
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
+
+        val startBtn = Button(this)
+        startBtn.text = "3. Start floating button"
+        startBtn.setOnClickListener {
+            if (Settings.canDrawOverlays(this@MainActivity)) {
+                startService(Intent(this@MainActivity, OverlayService::class.java))
+                status.text = "Floating button started, you can close this screen."
+            } else {
+                status.text = "Grant the overlay permission first."
+            }
+        }
+
+        val stopBtn = Button(this)
+        stopBtn.text = "Stop floating button"
+        stopBtn.setOnClickListener {
+            stopService(Intent(this@MainActivity, OverlayService::class.java))
+            status.text = "Floating button stopped."
+        }
+
+        root.addView(title)
+        root.addView(overlayBtn)
+        root.addView(accessibilityBtn)
+        root.addView(startBtn)
+        root.addView(stopBtn)
+        root.addView(status)
+        return root
     }
+}

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Assistive Touch</string>
+    <string name="accessibility_service_description">Lets the floating Assistive Touch button perform Back, Home, Recents, Lock and Screenshot actions.</string>
+</resources>

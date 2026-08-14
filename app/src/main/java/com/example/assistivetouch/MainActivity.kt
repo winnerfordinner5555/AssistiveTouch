@@ -44,3 +44,4 @@ class MainActivity : AppCompatActivity() {
             textSize = 15f
             setPadding(0, 32, 0, 32)
         }
+    }

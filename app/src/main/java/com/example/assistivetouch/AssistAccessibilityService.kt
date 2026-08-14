@@ -1,13 +1,10 @@
 package com.example.assistivetouch
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
+import android.graphics.Path
 import android.view.accessibility.AccessibilityEvent
 
-/**
- * This service does not need to inspect the screen. It exists only so that
- * the floating bubble can trigger system-level actions (Back, Home, Recents,
- * Lock, Screenshot) which regular apps are not allowed to do on their own.
- */
 class AssistAccessibilityService : AccessibilityService() {
 
     companion object {
@@ -28,5 +25,14 @@ class AssistAccessibilityService : AccessibilityService() {
     override fun onUnbind(intent: android.content.Intent?): Boolean {
         instance = null
         return super.onUnbind(intent)
+    }
+
+    fun performTapAt(x: Float, y: Float) {
+        val path = Path()
+        path.moveTo(x, y)
+        val gesture = GestureDescription.Builder()
+            .addStroke(GestureDescription.StrokeDescription(path, 0, 50))
+            .build()
+        dispatchGesture(gesture, null, null)
     }
 }
